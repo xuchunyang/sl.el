@@ -42,23 +42,25 @@
         (forward-line 1))
       result)))
 
+(defvar sl-dir
+  (file-name-directory (or load-file-name buffer-file-name)))
+
+(defvar sl-D51-trains
+  (sl-read-file (expand-file-name "D51-trains.txt" sl-dir)))
+
 (defvar sl-little-trains
-  (sl-read-file
-   (expand-file-name
-    "little-trains.txt"
-    (file-name-directory (or load-file-name buffer-file-name)))))
+  (sl-read-file (expand-file-name "little-trains.txt" sl-dir)))
 
 (defvar sl-smokes
-  (sl-read-file
-   (expand-file-name
-    "smokes.txt"
-    (file-name-directory (or load-file-name buffer-file-name)))))
+  (sl-read-file (expand-file-name "smokes.txt" sl-dir)))
 
 (defun sl-pad-spaces (length text)
   "Pad LENGTH blank spaces at the beginning of text."
-  (cl-loop with spaces = (make-string length ?\s)
-           for line in (split-string text "\n")
-           concat (concat spaces line "\n")))
+  (substring                        ; Remove trailing \n added by cl-loop-concat
+   (cl-loop with spaces = (make-string length ?\s)
+            for line in (split-string text "\n")
+            concat (concat spaces line "\n"))
+   0 -1))
 
 (defun sl-insert (linum column window-width text)
   "Insert TEXT at (LINUM, COLUMN) in the current buffer.
@@ -84,9 +86,9 @@ COLUMN can be negative."
                             line)))
                 (split-string text "\n") "\n"))))
 
-;;;###autoload
-(defun sl ()
-  (interactive)
+(defun sl-subr (trains smokes train-height)
+  "Subroutine of sl.
+TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
   (let ((buf (get-buffer-create "*sl*")))
     (with-current-buffer buf
       (switch-to-buffer buf)
@@ -95,8 +97,8 @@ COLUMN can be negative."
       (let* ((width (window-width))
              (height (window-height))
              ;; 12 is the height of the train (including its smoke)
-             (linum (- (/ height 2) (/ 12 2)))
-             (text1 (car sl-little-trains))
+             (linum (/ (- height train-height) 2))
+             (text1 (car trains))
              (text-width (cl-loop for line in (split-string text1 "\n")
                                   maximize (length line))))
         (cl-loop for col from width downto (- text-width)
@@ -110,12 +112,32 @@ COLUMN can be negative."
                                  (concat
                                   (sl-pad-spaces
                                    spaces
-                                   (elt sl-smokes (% smoke-counter (length sl-smokes))))
-                                  (elt sl-little-trains (% counter (length sl-little-trains)))))
+                                   (elt smokes (% smoke-counter (length smokes))))
+                                  "\n"
+                                  (elt trains (% counter (length trains)))))
                       (sleep-for 0 80)  ; Defaults to 80 ms
                       (discard-input)
                       (redisplay))))
       (kill-buffer))))
+
+;;;###autoload
+(defun sl ()
+  (interactive)
+  (sl-subr sl-D51-trains
+           ;; C51 & D%1 needs 7 blank spaces at the beginning,
+           ;; the template has 4 spaces
+           (mapcar (lambda (text) (sl-pad-spaces 3 text))
+                   sl-smokes)
+           ;; 10 is the height of DS1, 7 is the height of smoke
+           (+ 10 6)))
+
+;;;###autoload
+(defun sl-little ()
+  "Little version."
+  (interactive)
+  (sl-subr sl-little-trains sl-smokes
+           ;; Both the height of DS1 and the height of smoke are 6
+           (+ 6 6)))
 
 (provide 'sl)
 ;;; sl.el ends here
