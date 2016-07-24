@@ -5,7 +5,7 @@
 ;; Author: Chunyang Xu <xuchunyang.me@gmail.com>
 ;; URL: https://github.com/xuchunyang/sl.el
 ;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
-;; Version: 0.0
+;; Version: 0.1
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
