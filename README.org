@@ -1,0 +1,11 @@
+* sl.el
+
+sl.el is an Emacs clone of [[https://github.com/mtoyoda/sl][sl(1)]].
+
+** Usage
+
+Type =M-x sl=
+
+** Screenshot
+[[
+file:screenshot.png]]

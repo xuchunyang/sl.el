@@ -3,7 +3,8 @@
 ;; Copyright (C) 2016  Chunyang Xu
 
 ;; Author: Chunyang Xu <xuchunyang.me@gmail.com>
-;; Package-Requires: ((emacs "24"))
+;; URL: https://github.com/xuchunyang/sl.el
+;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
 ;; Version: 0.0
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -22,6 +23,10 @@
 ;;; Commentary:
 
 ;; sl.el is an Emacs clone of sl(1) <https://github.com/mtoyoda/sl>.
+;;
+;; To use, type M-x sl
+;;
+;; Currently, only the little version (sl -l) is finished.
 
 ;;; Code:
 
