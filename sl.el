@@ -88,6 +88,9 @@ COLUMN can be negative."
       (buffer-disable-undo)
       (setq cursor-type nil)
       (let* ((width (window-width))
+             (height (window-height))
+             ;; 12 is the height of the train (including its smoke)
+             (linum (- (/ height 2) (/ 12 2)))
              (text1 (car sl-little-trains))
              (text-width (cl-loop for line in (split-string text1 "\n")
                                   maximize (length line))))
@@ -98,11 +101,12 @@ COLUMN can be negative."
                  for spaces = (% counter 4)
                  do (progn
                       (erase-buffer)
-                      (sl-insert 24 col width (concat
-                                               (sl-pad-spaces
-                                                spaces
-                                                (elt sl-smokes (% smoke-counter (length sl-smokes))))
-                                               (elt sl-little-trains (% counter (length sl-little-trains)))))
+                      (sl-insert linum col width
+                                 (concat
+                                  (sl-pad-spaces
+                                   spaces
+                                   (elt sl-smokes (% smoke-counter (length sl-smokes))))
+                                  (elt sl-little-trains (% counter (length sl-little-trains)))))
                       (sleep-for 0 80)  ; Defaults to 80 ms
                       (discard-input)
                       (redisplay))))
