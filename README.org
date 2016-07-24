@@ -7,5 +7,5 @@ sl.el is an Emacs clone of [[https://github.com/mtoyoda/sl][sl(1)]].
 Type =M-x sl=
 
 ** Screenshot
-[[
-file:screenshot.png]]
+
+[[file:screenshot.png]]
