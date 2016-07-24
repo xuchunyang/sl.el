@@ -24,9 +24,10 @@
 
 ;; sl.el is an Emacs clone of sl(1) <https://github.com/mtoyoda/sl>.
 ;;
-;; To use, type M-x sl
+;; To use, type M-x sl or M-x sl-little
 ;;
-;; Currently, only the little version (sl -l) is finished.
+;; Currently, sl(1) with no option and with -l option are implemented, other
+;; options (i.e., -aFc) are not supported.
 
 ;;; Code:
 
