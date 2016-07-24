@@ -27,18 +27,33 @@
 
 (require 'cl-lib)
 
-(defvar sl-little-trains
-  (let ((file (expand-file-name
-               "little-trains.txt"
-               (file-name-directory (or load-file-name buffer-file-name))))
-        (trains '()))
+(defun sl-read-file (file)
+  (let ((result '()))
     (with-temp-buffer
       (insert-file-contents file)
       (while (re-search-forward "[^]*" nil t)
-        (push (buffer-substring (match-beginning 0) (- (match-end 0) 2)) trains)
+        (push (buffer-substring (match-beginning 0) (- (match-end 0) 2)) result)
         ;; Skip one newline
         (forward-line 1))
-      trains)))
+      result)))
+
+(defvar sl-little-trains
+  (sl-read-file
+   (expand-file-name
+    "little-trains.txt"
+    (file-name-directory (or load-file-name buffer-file-name)))))
+
+(defvar sl-smokes
+  (sl-read-file
+   (expand-file-name
+    "smokes.txt"
+    (file-name-directory (or load-file-name buffer-file-name)))))
+
+(defun sl-pad-spaces (length text)
+  "Pad LENGTH blank spaces at the beginning of text."
+  (cl-loop with spaces = (make-string length ?\s)
+           for line in (split-string text "\n")
+           concat (concat spaces line "\n")))
 
 (defun sl-insert (linum column window-width text)
   "Insert TEXT at (LINUM, COLUMN) in the current buffer.
@@ -47,7 +62,10 @@ TEXT can be multiple lines.
 COLUMN can be negative."
   (insert (make-string (- linum 1) ?\n))
   (when (< column 0)
-    (setq text (mapconcat (lambda (line) (substring line (- column)))
+    (setq text (mapconcat (lambda (line)
+                            (if (> (- column) (length line))
+                                ""
+                              (substring line (- column))))
                           (split-string text "\n")
                           "\n"))
     (setq column 0))
@@ -71,12 +89,20 @@ COLUMN can be negative."
       (setq cursor-type nil)
       (let* ((width (window-width))
              (text1 (car sl-little-trains))
-             (text-width (length (car (split-string text1 "\n")))))
+             (text-width (cl-loop for line in (split-string text1 "\n")
+                                  maximize (length line))))
         (cl-loop for col from width downto (- text-width)
                  for counter from 0
+                 with smoke-counter = 0
+                 when (= 0 (% counter 4)) do (cl-incf smoke-counter)
+                 for spaces = (% counter 4)
                  do (progn
                       (erase-buffer)
-                      (sl-insert 24 col width (elt sl-little-trains (% counter (length sl-little-trains))))
+                      (sl-insert 24 col width (concat
+                                               (sl-pad-spaces
+                                                spaces
+                                                (elt sl-smokes (% smoke-counter (length sl-smokes))))
+                                               (elt sl-little-trains (% counter (length sl-little-trains)))))
                       (sleep-for 0 80)  ; Defaults to 80 ms
                       (discard-input)
                       (redisplay))))
