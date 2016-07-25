@@ -97,7 +97,6 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
       (setq cursor-type nil)
       (let* ((width (window-width))
              (height (window-height))
-             ;; 12 is the height of the train (including its smoke)
              (linum (/ (- height train-height) 2))
              (text1 (car trains))
              (text-width (cl-loop for line in (split-string text1 "\n")
