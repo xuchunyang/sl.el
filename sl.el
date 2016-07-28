@@ -115,7 +115,9 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
                                    (elt smokes (% smoke-counter (length smokes))))
                                   "\n"
                                   (elt trains (% counter (length trains)))))
-                      (sleep-for 0 80)  ; Defaults to 80 ms
+                      (sleep-for 0 30)  ; sl(1) defaults to 80 ms, but Emacs
+                                        ; needs a much shorter interval to looks
+                                        ; like as fast as sl(1)
                       (discard-input)
                       (redisplay))))
       (kill-buffer))))
