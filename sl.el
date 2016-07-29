@@ -1,4 +1,4 @@
-;;; sl.el --- Emacs clone of sl(1)                   -*- lexical-binding: t; -*-
+;;; sl.el --- Clone of sl(1)                    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016  Chunyang Xu
 
@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; sl.el is an Emacs clone of sl(1) <https://github.com/mtoyoda/sl>.
+;; sl.el is a clone of sl(1) <https://github.com/mtoyoda/sl>.
 ;;
 ;; To use, type M-x sl or M-x sl-little
 ;;
@@ -124,6 +124,7 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
 
 ;;;###autoload
 (defun sl ()
+  "Steam Locomotive."
   (interactive)
   (sl-subr sl-D51-trains
            ;; C51 & D%1 needs 7 blank spaces at the beginning,
@@ -135,7 +136,7 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
 
 ;;;###autoload
 (defun sl-little ()
-  "Little version."
+  "Little version of Steam Locomotive."
   (interactive)
   (sl-subr sl-little-trains sl-smokes
            ;; Both the height of DS1 and the height of smoke are 6
