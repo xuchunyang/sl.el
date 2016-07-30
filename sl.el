@@ -131,7 +131,7 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
            ;; the template has 4 spaces
            (mapcar (lambda (text) (sl-pad-spaces 3 text))
                    sl-smokes)
-           ;; 10 is the height of DS1, 7 is the height of smoke
+           ;; 10 is the height of DS1, 6 is the height of smoke
            (+ 10 6)))
 
 ;;;###autoload
