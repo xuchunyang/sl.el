@@ -1,5 +1,7 @@
 * sl.el
 
+[[file:sl.gif]]
+
 sl.el is an Emacs clone of [[https://github.com/mtoyoda/sl][sl(1)]].
 
 ** Usage
@@ -8,7 +10,3 @@ Type =M-x sl= or =M-x sl-little=.
 
 Currently, sl(1) with no option and with -l option are implemented, other
 options (i.e., -aFc) are not supported.
-
-** Screenshot
-
-[[file:screenshot.png]]
