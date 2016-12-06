@@ -1,10 +1,10 @@
-;;; sl.el --- Clone of sl(1)                    -*- lexical-binding: t; -*-
+;;; sl.el --- An Emacs clone of sl(1)                    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016  Chunyang Xu
 
-;; Author: Chunyang Xu <xuchunyang.me@gmail.com>
+;; Author: Chunyang Xu <mail@xuchunyang.me>
 ;; URL: https://github.com/xuchunyang/sl.el
-;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
+;; Package-Requires: ((cl-lib "0.5"))
 ;; Version: 0.1
 
 ;; This program is free software; you can redistribute it and/or modify
