@@ -28,6 +28,8 @@
 ;;
 ;; Currently, sl(1) with no option and with -l option are implemented, other
 ;; options (i.e., -aFc) are not supported.
+;;
+;; Tips: hit C-g to quit
 
 ;;; Code:
 
@@ -91,36 +93,38 @@ COLUMN can be negative."
   "Subroutine of sl.
 TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
   (let ((buf (get-buffer-create "*sl*")))
-    (with-current-buffer buf
-      (switch-to-buffer buf)
-      (buffer-disable-undo)
-      (setq cursor-type nil)
-      (let* ((width (window-width))
-             (height (window-height))
-             (linum (/ (- height train-height) 2))
-             (text1 (car trains))
-             (text-width (cl-loop for line in (split-string text1 "\n")
-                                  maximize (length line))))
-        (cl-loop for col from width downto (- text-width)
-                 for counter from 0
-                 with smoke-counter = 0
-                 when (= 0 (% counter 4)) do (cl-incf smoke-counter)
-                 for spaces = (% counter 4)
-                 do (progn
-                      (erase-buffer)
-                      (sl-insert linum col width
-                                 (concat
-                                  (sl-pad-spaces
-                                   spaces
-                                   (elt smokes (% smoke-counter (length smokes))))
-                                  "\n"
-                                  (elt trains (% counter (length trains)))))
-                      (sleep-for 0 30)  ; sl(1) defaults to 80 ms, but Emacs
+    (unwind-protect
+        (with-current-buffer buf
+          (switch-to-buffer buf)
+          (buffer-disable-undo)
+          (setq cursor-type nil)
+          (let* ((width (window-width))
+                 (height (window-height))
+                 (linum (/ (- height train-height) 2))
+                 (text1 (car trains))
+                 (text-width (cl-loop for line in (split-string text1 "\n")
+                                      maximize (length line))))
+            (cl-loop for col from width downto (- text-width)
+                     for counter from 0
+                     with smoke-counter = 0
+                     when (= 0 (% counter 4)) do (cl-incf smoke-counter)
+                     for spaces = (% counter 4)
+                     do (progn
+                          (erase-buffer)
+                          (sl-insert linum col width
+                                     (concat
+                                      (sl-pad-spaces
+                                       spaces
+                                       (elt smokes (% smoke-counter (length smokes))))
+                                      "\n"
+                                      (elt trains (% counter (length trains)))))
+                          (sleep-for 0 30) ; sl(1) defaults to 80 ms, but Emacs
                                         ; needs a much shorter interval to looks
                                         ; like as fast as sl(1)
-                      (discard-input)
-                      (redisplay))))
-      (kill-buffer))))
+                          (discard-input)
+                          (redisplay))))
+          (kill-buffer))
+      (kill-buffer buf))))
 
 ;;;###autoload
 (defun sl ()
@@ -135,12 +139,24 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
            (+ 10 6)))
 
 ;;;###autoload
+(defun sl-forever ()
+  (interactive)
+  (with-temp-message "Hit C-g to Quit"
+    (while t (sl))))
+
+;;;###autoload
 (defun sl-little ()
   "Little version of Steam Locomotive."
   (interactive)
   (sl-subr sl-little-trains sl-smokes
            ;; Both the height of DS1 and the height of smoke are 6
            (+ 6 6)))
+
+;;;###autoload
+(defun sl-little-forever ()
+  (interactive)
+  (with-temp-message "Hit C-g to Quit"
+    (while t (sl-little))))
 
 (provide 'sl)
 ;;; sl.el ends here
