@@ -145,6 +145,13 @@ TRAIN-HEIGHT is the total height of TRAINS and its SMOKES."
     (while t (sl))))
 
 ;;;###autoload
+(defun sl-screen-saver ()
+  "Like `sl-forever' but hide the Mode line."
+  (interactive)
+  (let (mode-line-format)
+    (while t (sl))))
+
+;;;###autoload
 (defun sl-little ()
   "Little version of Steam Locomotive."
   (interactive)
